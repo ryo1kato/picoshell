@@ -1,0 +1,4 @@
+sample/msh
+*.o
+*.a
+*.so
