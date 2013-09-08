@@ -244,9 +244,9 @@ int main(void)
             }
 
             puts(">> ");
-            for ( i = 0; i < argc; i++ ) {
+            for ( i = argc-1; i > 0; i-- ) {
                 PUTS_GREEN_BACK(argv[i]);
-                if ( i < argc ) {
+                if ( i > 1 ) {
                     puts(", ");
                 }
             }
@@ -283,6 +283,3 @@ int main(void)
     io_close();
     return 0;
 }
-
-
-

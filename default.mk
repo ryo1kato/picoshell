@@ -1,3 +1,4 @@
+NAME = picoshell
 TOPDIR  ?= ..
 
 CC       = gcc
