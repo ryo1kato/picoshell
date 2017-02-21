@@ -200,4 +200,10 @@ const char* msh_get_command_usage(const msh_command_entry* cmdlist, const char* 
         return cmd_entry->usage;
     }
 }
+#else
+void msh_print_cmdlist(const msh_command_entry* cmdlist) { /* do nothing */ }
+const char* msh_get_command_usage(const msh_command_entry* cmdlist, const char* cmdname)
+{
+    return "No help available.\n";
+}
 #endif /*MSH_CONFIG_HELP*/

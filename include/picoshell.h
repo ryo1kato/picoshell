@@ -77,17 +77,6 @@ typedef struct
 #endif /* MSH_CONFIG_HELP */
 
 
-#if 0
-#ifdef MSH_CONFIG_HELP
-#define msh_declare_command(name, desc, usage) {#name, cmd_##name, desc, usage}
-#define MSH_COMMAND_TERMINATOR  {0, 0, 0, 0}
-#else
-#define msh_declare_command(name, desc, usage) {#name, cmd_##name}
-#define MSH_COMMAND_TERMINATOR  {0, 0}
-#endif
-#endif
-
-
 extern const msh_command_entry msh_builtin_commands[];
 int msh_do_command(const msh_command_entry* cmdp, int argc, const char** argv);
 
