@@ -48,7 +48,7 @@ static void
 cmdline_init( cmdline_t* pcmdline )
 {
     cmdline_clear( pcmdline );
-#   ifdef MSH_CONFIG_LINEEDIT
+#   ifdef MSH_CONFIG_CLIPBOARD
     memset(pcmdline->clipboard, '\0', MSH_CMDLINE_CHAR_MAX);
 #   endif
 }
@@ -87,6 +87,7 @@ cmdline_kill( cmdline_t* pcmdline )
 /** cmdline_set()
  * Discard current cmdline and set it to specified string
  */
+#ifdef MSH_CONFIG_CMDHISTORY
 static void
 cmdline_set( cmdline_t* pcmdline, const char* str )
 {
@@ -99,7 +100,7 @@ cmdline_set( cmdline_t* pcmdline, const char* str )
     pcmdline->pos     = len;
     pcmdline->linelen = len;
 }
-
+#endif
 
 /** cmdline_insert_char()
  * Insert (or append) a charactor 'c' at current cursor position.
@@ -282,8 +283,6 @@ cmdline_cursor_linetail( cmdline_t* pcmdline )
         pico_putchar( pcmdline->buf[pcmdline->pos++] );
     }
 }
-#endif/*MSH_CONFIG_LINEEDIT*/
-
 
 #ifdef MSH_CONFIG_CLIPBOARD
 /** cmdline_yank()
@@ -373,6 +372,7 @@ cmdline_killword( cmdline_t* pcmdline )
 }
 
 #endif /*MSH_CONFIG_CLIPBOARD*/
+#endif/*MSH_CONFIG_LINEEDIT*/
 
 
 
@@ -401,7 +401,7 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
     unsigned char input = c;
 
     /* QUICK HACK
-     * Map escape sequences (Arrow keys) to other bind
+     * Map escape sequences (Arrow keys) to other bind - work only for limited types of terminals
      */
     if (input == '\033' ) {
         char second, third;
@@ -409,18 +409,22 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
         third = pico_getchar();
         if ( second == '[' ) {
             switch (third) {
+#ifdef MSH_CONFIG_HISTORY
             case 'A':
                 input = MSH_KEYBIND_HISTPREV;
                 break;
             case 'B':
                 input = MSH_KEYBIND_HISTNEXT;
                 break;
+#endif
+#ifdef MSH_CONFIG_LINEEDIT
             case 'C':
                 input = MSH_KEYBIND_CURRIGHT;
                 break;
             case 'D':
                 input = MSH_KEYBIND_CURLEFT;
                 break;
+#endif
             default:
                 ;
                 /* do nothing */
@@ -458,6 +462,7 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
             cmdline_delete(pcmdline);
             break;
 
+#ifdef MSH_CONFIG_LINEEDIT
         case MSH_KEYBIND_CLEAR:
             cmdline_cursor_linehead(pcmdline);
             pico_puts(TERMESC_CLEAR);
@@ -465,7 +470,6 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
             cmdline_cursor_linetail(pcmdline);
             break;
 
-#ifdef MSH_CONFIG_LINEEDIT
         case MSH_KEYBIND_KILLLINE:
             cmdline_kill(pcmdline);
             break;
@@ -486,7 +490,6 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
             cmdline_cursor_linetail(pcmdline);
             break;
 
-#endif /*MSH_CONFIG_LINEEDIT*/
 #ifdef MSH_CONFIG_CLIPBOARD
         case MSH_KEYBIND_YANK:
             cmdline_yank(pcmdline);
@@ -500,6 +503,7 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
             cmdline_killword(pcmdline);
             break;
 #endif /*MSH_CONFIG_CLIPBOARD*/
+#endif /*MSH_CONFIG_LINEEDIT*/
 
 #ifdef MSH_CONFIG_CMDHISTORY
         case MSH_KEYBIND_HISTPREV:

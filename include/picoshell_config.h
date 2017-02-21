@@ -15,7 +15,7 @@ int pico_puts(const char* s);
 
 #define MSH_CONFIG_HELP         /* Enable help */
 #define MSH_CONFIG_LINEEDIT     /* Enable command line editor */
-#define MSH_CONFIG_CLIPBOARD    /* Enable command line cut & paste */
+#define MSH_CONFIG_CLIPBOARD    /* Enable command line cut & paste; depends on LINEEDIT */
 #define MSH_CONFIG_CMDHISTORY   /* Enable command line history */
 
 
