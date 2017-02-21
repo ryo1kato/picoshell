@@ -20,9 +20,9 @@ Introduction
 Compiling
 
     Just type 'make' to comple a sample. (of course you need GCC)
-    There's no API documentation (yet). Please see sample/ directory
+    There's no API documentation (yet). Please see "sample" directory
     for usage. Note that this library is originally developed as 'msh'
-    and function names and macro definitions are still using this prefix.
+    and function names and macro definitions are still using it as prefix.
 
     You can configure keybind used for line editor, meta charactors, and
     command line history behavior, by editing include/picoshell_config.h.
@@ -30,17 +30,12 @@ Compiling
 
 External Functions
 
-    PicoShell uses the following functions. As stated above, getchar(),
-    putchar(), puts() should implemented slightly differently from
-    standard C specification:
-
-        * All IO functions (getchar, putchar, and puts) should NOT buffered
-        * puts() should NOT emit trailing newline.
+    PicoShell uses the following functions.
 
         <stdio.h>
-            getchar
-            putchar
-            puts
+            getchar (as pico_getchar)
+            putchar (as pico_putchar)
+            puts    (as pico_puts)
 
         <string.h>
             memset
@@ -48,5 +43,13 @@ External Functions
             strlen
             strcpy
             strcmp
+
+    getchar(), putchar(), and puts() should implemented slightly differently
+    from standard C specification, and for that reason the code is referring
+    the functions with "pico_" prefix so that easier to adjust / wrap.
+
+        * All IO functions (getchar, putchar, and puts) should NOT buffered.
+        * puts() should NOT emit trailing newline.
+
 
 

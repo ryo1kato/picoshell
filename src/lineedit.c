@@ -2,12 +2,12 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "msh_termesc.h"
+#include "picoshell_termesc.h"
 #include "history.h"
 
 
 #ifdef MSH_CONFIG_ENABLE_BELL
-#define ring_terminal_bell() putchar('\a');
+#define ring_terminal_bell() pico_putchar('\a');
 #else
 #define ring_terminal_bell() /* disable */
 #endif
@@ -72,13 +72,13 @@ cmdline_kill( cmdline_t* pcmdline )
 {
     int i;
     for ( i = 0;  i < pcmdline->pos;  i++ ) {
-        putchar('\b');
+        pico_putchar('\b');
     }
     for ( i = 0;  i < pcmdline->linelen;  i++ ) {
-        putchar(' ');
+        pico_putchar(' ');
     }
     for ( i = 0;  i < pcmdline->linelen;  i++ ) {
-        putchar('\b');
+        pico_putchar('\b');
     }
     cmdline_clear( pcmdline );
 }
@@ -95,7 +95,7 @@ cmdline_set( cmdline_t* pcmdline, const char* str )
     cmdline_kill(pcmdline);
     len = strlen(str);
     strcpy( pcmdline->buf, str );
-    puts( str );
+    pico_puts( str );
     pcmdline->pos     = len;
     pcmdline->linelen = len;
 }
@@ -114,7 +114,7 @@ cmdline_insert_char( cmdline_t* pcmdline, unsigned char c )
         return 0;
     }
 
-    putchar(c);
+    pico_putchar(c);
     /* Is cursor at the end of the cmdline ? */
     if ( pcmdline->pos == pcmdline->linelen ) {
         /* just append */
@@ -122,10 +122,10 @@ cmdline_insert_char( cmdline_t* pcmdline, unsigned char c )
     } else {
         /* slide the strings after the cursor to the right */
         int i;
-        puts(  & pcmdline->buf[ pcmdline->pos ]  );
+        pico_puts(  & pcmdline->buf[ pcmdline->pos ]  );
         for (i = pcmdline->linelen;  i > pcmdline->pos;  i--) {
             pcmdline->buf[ i ] = pcmdline->buf[ i - 1 ];
-            putchar('\b');
+            pico_putchar('\b');
         }
         pcmdline->buf[ pcmdline->pos ] = c;
     }
@@ -147,23 +147,23 @@ cmdline_backspace( cmdline_t* pcmdline )
         ring_terminal_bell();
         return 0;
     }
-    putchar('\b');
+    pico_putchar('\b');
     /* Is cursor at the end of the cmdline ? */
     if ( pcmdline->pos == pcmdline->linelen ) {
-        putchar(' ');
-        putchar('\b');
+        pico_putchar(' ');
+        pico_putchar('\b');
     } else {
         int i;
         /* slide the characters after cursor position to the left */
         for ( i = pcmdline->pos;  i < pcmdline->linelen;  i++ ) {
             pcmdline->buf[i-1] = pcmdline->buf[i];
-            putchar( pcmdline->buf[i] );
+            pico_putchar( pcmdline->buf[i] );
         }
-        putchar(' ');
+        pico_putchar(' ');
         /* put the cursor to its orignlal position */
-        /* +1 in for () is for putchar(' ') in the previous line */
+        /* +1 in for () is for pico_putchar(' ') in the previous line */
         for ( i = pcmdline->pos;  i < pcmdline->linelen + 1;  i++ ) {
-            putchar('\b');
+            pico_putchar('\b');
         }
     }
     pcmdline->buf[ pcmdline->linelen - 1 ] = '\0';
@@ -192,12 +192,12 @@ cmdline_delete( cmdline_t* pcmdline )
         /* slide the chars on and after cursor position to the left */
         for ( i = pcmdline->pos;  i < pcmdline->linelen - 1;  i++ ) {
             pcmdline->buf[i] = pcmdline->buf[ i + 1 ];
-            putchar( pcmdline->buf[i] );
+            pico_putchar( pcmdline->buf[i] );
         }
-        putchar(' ');
+        pico_putchar(' ');
         /* put the cursor to its orignlal position */
         for ( i = pcmdline->pos;  i < pcmdline->linelen;  i++ ) {
-            putchar('\b');
+            pico_putchar('\b');
         }
 
     }
@@ -237,7 +237,7 @@ static int
 cmdline_cursor_left( cmdline_t* pcmdline )
 {
     if ( pcmdline->pos > 0 ) {
-        putchar('\b');
+        pico_putchar('\b');
         pcmdline->pos--;
         return 1;
     }
@@ -252,7 +252,7 @@ static int
 cmdline_cursor_right( cmdline_t* pcmdline )
 {
     if ( pcmdline->pos < pcmdline->linelen ) {
-        putchar( pcmdline->buf[pcmdline->pos++] );
+        pico_putchar( pcmdline->buf[pcmdline->pos++] );
         return 1;
     }
     else
@@ -270,7 +270,7 @@ static void
 cmdline_cursor_linehead( cmdline_t* pcmdline )
 {
     while ( pcmdline->pos > 0 ) {
-        putchar('\b');
+        pico_putchar('\b');
         pcmdline->pos--;
     }
 }
@@ -279,7 +279,7 @@ static void
 cmdline_cursor_linetail( cmdline_t* pcmdline )
 {
     while ( pcmdline->pos < pcmdline->linelen ) {
-        putchar( pcmdline->buf[pcmdline->pos++] );
+        pico_putchar( pcmdline->buf[pcmdline->pos++] );
     }
 }
 #endif/*MSH_CONFIG_LINEEDIT*/
@@ -323,10 +323,10 @@ cmdline_killtail( cmdline_t* pcmdline )
 
     /* erase chars on and right of the cursor on terminal */
     for ( i = pcmdline->pos;  i < pcmdline->linelen; i++ ) {
-        putchar(' ');
+        pico_putchar(' ');
     }
     for ( i = pcmdline->pos;  i < pcmdline->linelen; i++ ) {
-        putchar('\b');
+        pico_putchar('\b');
     }
 
     /* erase chars on and right of the cursor in buf */
@@ -405,8 +405,8 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
      */
     if (input == '\033' ) {
         char second, third;
-        second = getchar();
-        third = getchar();
+        second = pico_getchar();
+        third = pico_getchar();
         if ( second == '[' ) {
             switch (third) {
             case 'A':
@@ -436,7 +436,7 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
          * End of input if newline char.
          */
         case MSH_KEYBIND_ENTER:
-            putchar('\n');
+            pico_putchar('\n');
             return 0;
 
         case '\t':
@@ -446,7 +446,7 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
 
         case MSH_KEYBIND_DISCARD:
             cmdline_clear(pcmdline);
-            putchar('\n');
+            pico_putchar('\n');
             return 0;
 
         case MSH_KEYBIND_BACKSPACE:
@@ -460,8 +460,8 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
 
         case MSH_KEYBIND_CLEAR:
             cmdline_cursor_linehead(pcmdline);
-            puts(TERMESC_CLEAR);
-            puts(prompt_string);
+            pico_puts(TERMESC_CLEAR);
+            pico_puts(prompt_string);
             cmdline_cursor_linetail(pcmdline);
             break;
 
@@ -558,9 +558,9 @@ int msh_get_cmdline(char* linebuf)
     } else {
         cmdline_clear( &CmdLine );
     }
-    puts(prompt_string);
+    pico_puts(prompt_string);
 
-    while ( cursor_inputchar( &CmdLine, getchar() ) )
+    while ( cursor_inputchar( &CmdLine, pico_getchar() ) )
         ;
 
 #ifdef MSH_CONFIG_CMDHISTORY

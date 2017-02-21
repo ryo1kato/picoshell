@@ -1,9 +1,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "msh.h"
-#include "msh_config.h"
-#include "msh_termesc.h"
+#include "picoshell.h"
+#include "picoshell_config.h"
+#include "picoshell_termesc.h"
 
 
 /* ***************************************************************************
@@ -72,7 +72,7 @@ static int cmd_help(int argc, const char** argv)
 
 static int cmd_shellhelp(int argc, const char** argv)
 {
-    puts(MSH_CMDEDIT_HELP_DESCRIPTION);
+    pico_puts(MSH_CMDEDIT_HELP_DESCRIPTION);
     return 0;
 }
 #endif
@@ -85,10 +85,10 @@ static int cmd_echo(int argc, const char** argv)
         return 0;
     }
     for ( i = 1;  i < argc;  i++ ) {
-        puts(argv[i]);
-        putchar(' ');
+        pico_puts(argv[i]);
+        pico_putchar(' ');
     }
-    putchar('\n');
+    pico_putchar('\n');
     return 0;
 }
 
@@ -153,9 +153,9 @@ int msh_do_command(const msh_command_entry* cmdlist, int argc, const char** argv
         return ( cmd_entry->func(argc, argv) );
     } else {
         /*
-        puts("command not found: ");
-        puts(argv[0]);
-        puts("\n");
+        pico_puts("command not found: ");
+        pico_puts(argv[0]);
+        pico_puts("\n");
         */
         return -1;
     }
@@ -169,17 +169,17 @@ void msh_print_cmdlist(const msh_command_entry* cmdlist)
 
     i = 0;
     while ( cmdlist[i].name != NULL ) {
-            puts("    ");
-            puts(cmdlist[i].name);
+            pico_puts("    ");
+            pico_puts(cmdlist[i].name);
             for (j = indent - strlen(cmdlist[i].name);  j > 0;  j--) {
-                putchar(' ');
+                pico_putchar(' ');
             }
-            puts("- ");
+            pico_puts("- ");
             if ( cmdlist[i].description != NULL ) {
-                puts(cmdlist[i].description);
-                puts("\n");
+                pico_puts(cmdlist[i].description);
+                pico_puts("\n");
             } else {
-                puts("(No description available)\n");
+                pico_puts("(No description available)\n");
             }
         i++;
     }

@@ -15,9 +15,9 @@
 void io_open(void);
 void io_close(void);
 
-int getchar(void);
-int putchar(int c);
-int puts(const char* s);
+int pico_getchar(void);
+int pico_putchar(int c);
+int pico_puts(const char* s);
 
 
 static int tty;
@@ -25,7 +25,7 @@ static int tty;
 /* To make sure terminal state to be restored when killed */
 void sig_exit(int sig)
 {
-    putchar('\n');
+    pico_putchar('\n');
     (void) sig; /* unused */
     io_close();
     exit(EXIT_SUCCESS);
@@ -35,7 +35,7 @@ void io_open(void)
 {
     /* disable terminal buffering, local echo, and Ctrl-C,
      * to emulate serial IO */
-    puts("Type 'exit' or press Ctrl-\\ to quit.\n");
+    pico_puts("Type 'exit' or press Ctrl-\\ to quit.\n");
     system("stty -icanon min 1 time 0");
     system("stty -echo");
     system("stty intr ''");
@@ -52,37 +52,34 @@ void io_open(void)
 void io_close(void)
 {
     /* close(tty), restore Ctrl-C */
-    puts("bye\n");
+    pico_puts("bye\n");
     system("stty intr ^C");
     system("stty echo");
 }
 
-#undef getchar
-int getchar(void)
+int pico_getchar(void)
 {
     char buf;
     read(tty, &buf, 1);
     return buf;
 }
 
-#undef putchar
-int putchar(int c)
+int pico_putchar(int c)
 {
     char buf = c;
     write(tty, &buf, 1);
     return 0;
 }
 
-#undef puts
-int puts(const char* s)
+int pico_puts(const char* s)
 {
     const char* c = s;
     while ( *c != '\0' ) {
-        putchar(*c);
+        pico_putchar(*c);
         c++;
     }
-    /* unlike libc standard puts(), our puts() doesn't put a trailing newline */
-    /* putchar('\n'); */
+    /* unlike libc standard pico_puts(), our pico_puts() doesn't put a trailing newline */
+    /* pico_putchar('\n'); */
     return 1;
 }
 
@@ -93,22 +90,22 @@ int puts(const char* s)
  *                   Tiny sample shell using msh routines.
  * *************************************************************************** */
 
-#include "msh.h"
-#include "msh_termesc.h"
+#include "picoshell.h"
+#include "picoshell_termesc.h"
 
 #define PUTS_BLUE_BACK(charp) \
 { \
-    puts(TERMESC_BACK_BLUE); \
-    puts(charp); \
-    puts(TERMESC_FONT_NORMAL);\
+    pico_puts(TERMESC_BACK_BLUE); \
+    pico_puts(charp); \
+    pico_puts(TERMESC_FONT_NORMAL);\
 }
 
 
 #define PUTS_GREEN_BACK(charp) \
 { \
-    puts(TERMESC_BACK_GREEN); \
-    puts(charp); \
-    puts(TERMESC_FONT_NORMAL);\
+    pico_puts(TERMESC_BACK_GREEN); \
+    pico_puts(charp); \
+    pico_puts(TERMESC_FONT_NORMAL);\
 }
 
 /*
@@ -155,7 +152,7 @@ int cmd_help(int argc, const char** argv)
         }
         else
         {
-            puts(usage);
+            pico_puts(usage);
         }
     }
     return 0;
@@ -171,10 +168,10 @@ int cmd_myecho(int argc, const char** argv)
         return 0;
     }
     for ( i = 1;  i < argc;  i++ ) {
-        puts(argv[i]);
-        putchar('_'); /* '_' instead of ' ' */
+        pico_puts(argv[i]);
+        pico_putchar('_'); /* '_' instead of ' ' */
     }
-    putchar('\n');
+    pico_putchar('\n');
     return 0;
 }
 
@@ -184,7 +181,7 @@ msh_define_help( exit, "exit the msh sample",
 int cmd_exit(int argc, const char** argv)
 {
     if ( argc > 2 ) {
-        puts("exit: too many arguments\n");
+        pico_puts("exit: too many arguments\n");
         return 1;
     } else {
         int exit_code = 0; /* default success */
@@ -236,21 +233,21 @@ int main(void)
             ret_parse = msh_parse_line(linebufp, argbuf, &argc, argv);
 
             if ( ret_parse == NULL ) {
-                puts("Syntax error\n");
+                pico_puts("Syntax error\n");
                 break; /* discard this line */
             }
             if ( strlen(argv[0]) <= 0 ) {
                 break; /* empty input line */
             }
 
-            puts(">> ");
+            pico_puts(">> ");
             for ( i = argc-1; i > 0; i-- ) {
                 PUTS_GREEN_BACK(argv[i]);
                 if ( i > 1 ) {
-                    puts(", ");
+                    pico_puts(", ");
                 }
             }
-            puts("\n");
+            pico_puts("\n");
 
             ret_command = msh_do_command(my_commands, argc, (const char**)argv);
             if ( ret_command < 0 ) {
@@ -260,9 +257,9 @@ int main(void)
                     msh_do_command(msh_builtin_commands, argc, (const char**)argv);
             }
             if ( ret_command < 0 ) {
-                puts("command not found: \'");
-                puts(argv[0]);
-                puts("'\n");
+                pico_puts("command not found: \'");
+                pico_puts(argv[0]);
+                pico_puts("'\n");
             }
 
             /*

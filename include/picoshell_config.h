@@ -1,7 +1,13 @@
 #ifndef __MSH_SHELL_CONFIG_H_INCLUDED__
 #define __MSH_SHELL_CONFIG_H_INCLUDED__
 
+int pico_getchar(void);
+int pico_putchar(int c);
+int pico_puts(const char* s);
 
+#ifndef NULL
+#define NULL ((void *) 0)
+#endif
 
 /* ************************************************************************* *
  *     Basic Configurations

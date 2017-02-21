@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "msh_config.h"
+#include "picoshell_config.h"
 
 typedef struct parse_state_struct {
     const char* readpos;
@@ -161,7 +161,7 @@ msh_parse_line(const char* cmdline, char* argvbuf, int* pargc, char** argv)
                 case MSH_CMD_SEP_CHAR:
                     return (state.readpos+1);
                 default:
-                    puts("Fatal error in parse() \n");
+                    pico_puts("Fatal error in parse() \n");
                     return NULL;
             }
         }
@@ -202,7 +202,7 @@ msh_parse_line(const char* cmdline, char* argvbuf, int* pargc, char** argv)
              * Can't be!!
              */
             else {
-                puts("Fatal error in parse() ");
+                pico_puts("Fatal error in parse() ");
                 return NULL;
             }
         }

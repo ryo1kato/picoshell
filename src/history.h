@@ -1,7 +1,7 @@
 #ifndef __MSH_HISTORY_H_INCLUDED__
 #define __MSH_HISTORY_H_INCLUDED__
 
-#include "msh_config.h"
+#include "picoshell_config.h"
 
 #ifdef MSH_CONFIG_CMDHISTORY
 
