@@ -25,13 +25,13 @@ int pico_puts(const char* s);
  *     Buffer Sizes for Commandline Editting
  * ************************************************************************* */
 /* maximum chars per line, INCLUDEING a traling null char */
-#define MSH_CMDLINE_CHAR_MAX (128)
+#define MSH_CMDLINE_CHAR_MAX (50)
 
 /* maximum argument a commandline can hold, i.e., max of argc value */
-#define MSH_CMDARGS_MAX (16)
+#define MSH_CMDARGS_MAX (8)
 
 /* maximum number of history */
-#define MSH_CMD_HISTORY_MAX  (8)
+#define MSH_CMD_HISTORY_MAX  (4)
 
 /* ring the terminal bell (\a) if invalid keyinput */
 #define MSH_CONFIG_ENABLE_BELL

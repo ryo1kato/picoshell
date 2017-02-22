@@ -3,8 +3,8 @@ SOURCES = $(wildcard *.c)
 include ../default.mk
 
 exe: $(NAME)
-$(NAME): $(NAME).o ../lib$(NAME).a
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $< -l$(NAME) -L..
+$(NAME): main.o io_unix.o ../lib$(NAME).a
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $(filter %.o,$^) -l$(NAME) -L..
 
 ../lib$(NAME).a:
 	$(MAKE) -C ../src

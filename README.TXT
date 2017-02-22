@@ -6,7 +6,7 @@ Introduction
 
     PicoShell is a tiny C library for shell-like CLI with emacs-like line-edit
     and command history support, aimed for CLI of bootloader or tiny, resource
-    poor device like PICs.
+    poor device like PICs or Arduino.
 
     PicoShell is implemented with using just a few external C functions
     listed below, which are similar or same as the standard C library
@@ -19,13 +19,21 @@ Introduction
 
 Compiling
 
-    Just type 'make' to comple a sample. (of course you need GCC)
+    Just type 'make' to comple a sample on a Unix machine (Tested on
+    Linux and MacOSX)
     There's no API documentation (yet). Please see "sample" directory
     for usage. Note that this library is originally developed as 'msh'
     and function names and macro definitions are still using it as prefix.
 
     You can configure keybind used for line editor, meta charactors, and
     command line history behavior, by editing include/picoshell_config.h.
+
+
+Arduino
+
+    'make arduino' to generate a stub project directory 'picoshell_arduiono'.
+    Open 'picoshell_arduino.ino' file in Arduino IDE, build and upload.
+    You probably want to disable some of the features to save ROM / RAM.
 
 
 External Functions
@@ -50,6 +58,5 @@ External Functions
 
         * All IO functions (getchar, putchar, and puts) should NOT buffered.
         * puts() should NOT emit trailing newline.
-
 
 

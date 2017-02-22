@@ -2,3 +2,4 @@ sample/picoshell
 *.o
 *.a
 *.so
+picoshell_arduino
