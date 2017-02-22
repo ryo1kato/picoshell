@@ -209,23 +209,6 @@ cmdline_delete( cmdline_t* pcmdline )
 
 
 
-#if 0
-/** cmdline_get_lastchar()
- * Get the last input charactor to the cmdline buffer.
- * Maybe usefull for '\' escaping.
- */
-static unsigned char
-cmdline_get_lastchar( cmdline_t* pcmdline )
-{
-    if ( pcmdline->pos == 0 ) {
-        return '\0';
-    } else {
-        return pcmdline->buf[ pcmdline->pos - 1 ];
-    }
-}
-#endif
-
-
 /* ************************************************************************* *
  *     Line Edit Functions
  * ************************************************************************* */
@@ -462,16 +445,16 @@ cursor_inputchar( cmdline_t* pcmdline, unsigned char c )
             cmdline_delete(pcmdline);
             break;
 
+        case MSH_KEYBIND_KILLLINE:
+            cmdline_kill(pcmdline);
+            break;
+
 #ifdef MSH_CONFIG_LINEEDIT
         case MSH_KEYBIND_CLEAR:
             cmdline_cursor_linehead(pcmdline);
             pico_puts(TERMESC_CLEAR);
             pico_puts(prompt_string);
             cmdline_cursor_linetail(pcmdline);
-            break;
-
-        case MSH_KEYBIND_KILLLINE:
-            cmdline_kill(pcmdline);
             break;
 
         case MSH_KEYBIND_CURLEFT:

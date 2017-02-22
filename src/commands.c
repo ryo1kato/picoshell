@@ -9,67 +9,55 @@
 /* ***************************************************************************
  *                cmdedit help strings (displayed by 'shellhelp')
  * ***************************************************************************/
-#ifdef MSH_CONFIG_HELP
-
+#ifdef MSH_CONFIG_HELP_KEYBIND
 #ifdef MSH_CONFIG_LINEEDIT
-#    define MSH_HELP_LINEEDIT   "  - Minimal Emacs-like line editting. (Ctrl+F,B,E,A)\n"
-#    define MSH_HELP_LINEEDIT_KEYS \
+#    define MSH_HELP_LINEEDIT \
+        " * Minimal Emacs-like line editting. (Ctrl+F,B,E,A)\n" \
         "    Ctrl-F  Cursor right     ('F'orward)\n"  \
         "    Ctrl-B  Cursor left      ('B'ackward)\n" \
         "    Ctrl-A  Cursor line head ('A'head)\n"  \
         "    Ctrl-E  Cursor line tail ('E'nd)\n"
+#else
+#   define MSH_HELP_LINEEDIT ""
 #endif
 
 #ifdef MSH_CONFIG_CMDHISTORY
-#    define MSH_HELP_CMDHISTORY "  - Command-line history. (Ctrl+P,N)\n"
-#    define MSH_HELP_CMDHISTORY_KEYS \
+#    define MSH_HELP_CMDHISTORY \
+        " * Command-line history. (Ctrl+P,N)\n" \
         "    Ctrl-P  Previous history ('P'revious)\n" \
         "    Ctrl-N  Next history     ('N'ext)\n"
+#else
+#   define MSH_HELP_CMDHISTORY ""
+#   define MSH_HELP_CMDHISTORY_KEYS ""
 #endif
 
 #ifdef MSH_CONFIG_CLIPBOARD
-#    define MSH_HELP_CLIPBOARD  "  - Cut & paste. (Ctrl+K,W,Y)\n"
-#    define MSH_HELP_CLIPBOARD_KEYS \
+#    define MSH_HELP_CLIPBOARD  \
+        " * Cut & paste. (Ctrl+K,W,Y)\n" \
         "    Ctrl-K  Cut strings after the cursor to clipboard  ('K'ill)\n" \
         "    Ctrl-W  Cut a word before the cursor to clipboard  ('W'ord)\n" \
         "    Ctrl-Y  Paste clipboard content to cursor position ('Y'ank)\n"
+#else
+#    define MSH_HELP_CLIPBOARD  ""
 #endif
 
 #define MSH_CMDEDIT_HELP_DESCRIPTION \
-    "  Command-line editting\n" \
-    "\n" \
-    MSH_HELP_LINEEDIT \
-    MSH_HELP_CMDHISTORY \
-    MSH_HELP_CLIPBOARD \
-    "\n" \
+    "* Basic keybinds\n" \
     "    Ctrl-H  Backspace\n" \
     "    Ctrl-D  Delete\n" \
     "    Ctrl-L  Clear screen\n" \
     "    Ctrl-C  Discard line\n" \
     "    Ctrl-U  Kill whole line\n" \
-    MSH_HELP_LINEEDIT_KEYS \
-    MSH_HELP_CMDHISTORY_KEYS \
-    MSH_HELP_CLIPBOARD_KEYS \
-    "\n"
-#else
-#define MSH_CMDEDIT_HELP_DESCRIPTION "(no help available)"
+    MSH_HELP_LINEEDIT \
+    MSH_HELP_CMDHISTORY \
+    MSH_HELP_CLIPBOARD
 #endif
-
-
 
 
 /* ***************************************************************************
  *                         the builtin commands
  * ***************************************************************************/
-#ifdef MSH_CONFIG_HELP
-/*
-static int cmd_help(int argc, const char** argv)
-{
-    return msh_print_help(msh_builtin_commands, argc, argv);
-}
-*/
-
-
+#ifdef MSH_CONFIG_HELP_KEYBIND
 static int cmd_shellhelp(int argc, const char** argv)
 {
     pico_puts(MSH_CMDEDIT_HELP_DESCRIPTION);
@@ -98,23 +86,22 @@ static int cmd_echo(int argc, const char** argv)
  * ***************************************************************************/
 
 const msh_command_entry msh_builtin_commands[] = {
-#ifdef MSH_CONFIG_HELP
+#ifdef MSH_CONFIG_HELP_KEYBIND
     { "shellhelp", cmd_shellhelp,
         "display help for keybinds of commandline editting",
-        "No further help available\n",
+        "No further help available.\n",
     },
-#endif/*MSH_CONFIG_HELP*/
+#endif
 
     { "echo", cmd_echo,
 #ifdef MSH_CONFIG_HELP
         "echo all arguments separated by a whitespace",
-        "No further help available\n"
+        "Usage: echo [string ...]\n"
 #endif
     },
 
     MSH_COMMAND_TERMINATOR
 };
-
 
 
 /*

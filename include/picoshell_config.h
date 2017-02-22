@@ -14,6 +14,7 @@ int pico_puts(const char* s);
  * ************************************************************************* */
 
 #define MSH_CONFIG_HELP         /* Enable help */
+#define MSH_CONFIG_HELP_KEYBIND /* Enable keybind help */
 #define MSH_CONFIG_LINEEDIT     /* Enable command line editor */
 #define MSH_CONFIG_CLIPBOARD    /* Enable command line cut & paste; depends on LINEEDIT */
 #define MSH_CONFIG_CMDHISTORY   /* Enable command line history */
@@ -24,20 +25,19 @@ int pico_puts(const char* s);
  *     Buffer Sizes for Commandline Editting
  * ************************************************************************* */
 /* maximum chars per line, INCLUDEING a traling null char */
-#define MSH_CMDLINE_CHAR_MAX (256)
+#define MSH_CMDLINE_CHAR_MAX (128)
 
 /* maximum argument a commandline can hold, i.e., max of argc value */
-#define MSH_CMDARGS_MAX (32)
+#define MSH_CMDARGS_MAX (16)
 
 /* maximum number of history */
-#define MSH_CMD_HISTORY_MAX  (16)
+#define MSH_CMD_HISTORY_MAX  (8)
 
 /* ring the terminal bell (\a) if invalid keyinput */
 #define MSH_CONFIG_ENABLE_BELL
 
 /* default prompt string. (cmdedit.c) */
 #define MSH_CMD_PROMPT "MSH> "
-
 
 
 
@@ -66,12 +66,12 @@ int pico_puts(const char* s);
 #define MSH_KEYBIND_BACKSPACE MSH_CTRL_KEY('h')
 #define MSH_KEYBIND_DISCARD   MSH_CTRL_KEY('c')
 #define MSH_KEYBIND_DELETE    MSH_CTRL_KEY('d')
+#define MSH_KEYBIND_KILLLINE  MSH_CTRL_KEY('u')
 #ifdef MSH_CONFIG_LINEEDIT
 #   define MSH_KEYBIND_CURRIGHT  MSH_CTRL_KEY('f')
 #   define MSH_KEYBIND_CURLEFT   MSH_CTRL_KEY('b')
 #   define MSH_KEYBIND_LINEHEAD  MSH_CTRL_KEY('a')
 #   define MSH_KEYBIND_LINETAIL  MSH_CTRL_KEY('e')
-#   define MSH_KEYBIND_KILLLINE  MSH_CTRL_KEY('u')
 #   define MSH_KEYBIND_YANK      MSH_CTRL_KEY('y')
 #   define MSH_KEYBIND_KILLTAIL  MSH_CTRL_KEY('k')
 #   define MSH_KEYBIND_KILLWORD  MSH_CTRL_KEY('w')
