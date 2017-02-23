@@ -126,7 +126,7 @@ int cmd_exit(int argc, const char** argv)
  * main() just loopingly read input line, parse, and execute.
  */
 
-int main(void)
+int shell(void)
 {
     char  linebuf[MSH_CMDLINE_CHAR_MAX];
 

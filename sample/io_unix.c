@@ -19,6 +19,7 @@ int pico_getchar(void);
 int pico_putchar(int c);
 int pico_puts(const char* s);
 
+int shell(void);
 
 static int tty;
 
@@ -81,4 +82,8 @@ int pico_puts(const char* s)
     /* unlike libc standard pico_puts(), our pico_puts() doesn't put a trailing newline */
     /* pico_putchar('\n'); */
     return 1;
+}
+
+int main(void) {
+    return shell();
 }

@@ -1,18 +1,21 @@
 /*
- * Despite the name, this is actually true "main()" file for Arduino - contains the setup() and loop() functions.
+ * Despite the name, this is actually "main()" file for Arduino - contains the setup() and loop() functions.
  */
 
 #include "picoshell.h"
 
 #define BAUD 9600
 
-int main(void);
+int shell(void);
 
 void io_open(void) {};
 void io_close(void) {};
 
 int pico_getchar(void)
 {
+    while( ! Serial.available() ) {
+        delay(1);
+    }
     int c = Serial.read();
     if ( c == '\r' ) {
         return '\n';
@@ -41,14 +44,11 @@ int pico_puts(const char* s)
 }
 
 void setup()  {
-  Serial.begin(BAUD);
+    Serial.begin(BAUD);
+    delay(10);
+    pico_puts("\n\n*** picoshell for Arduino ***\n");
 }
 
 void loop() {
-    if (Serial.available()) {
-        pico_puts("-----------------------------\n");
-        pico_puts("    picoshell for Arduino\n");
-        pico_puts("-----------------------------\n");
-        main();
-    }
+    shell();
 }

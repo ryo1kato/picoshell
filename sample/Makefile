@@ -1,9 +1,10 @@
 all: exe
 SOURCES = $(wildcard *.c)
+OBJECTS = $(.c:.o $(SOURCES))
 include ../default.mk
 
 exe: $(NAME)
-$(NAME): main.o io_unix.o ../lib$(NAME).a
+$(NAME): $(OBJECTS) ../lib$(NAME).a
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $(filter %.o,$^) -l$(NAME) -L..
 
 ../lib$(NAME).a:

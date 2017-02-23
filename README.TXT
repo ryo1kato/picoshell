@@ -33,7 +33,8 @@ Arduino
 
     'make arduino' to generate a stub project directory 'picoshell_arduiono'.
     Open 'picoshell_arduino.ino' file in Arduino IDE, build and upload.
-    You probably want to disable some of the features to save ROM / RAM.
+    You probably want to disable some of the features to save ROM / RAM
+    by editing picoshell_config.h file.
 
 
 External Functions
