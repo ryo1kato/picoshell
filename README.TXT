@@ -31,7 +31,7 @@ Compiling
 
 Arduino
 
-    'make arduino' to generate a stub project directory 'picoshell_arduiono'.
+    'make arduino' to generate a stub project directory 'picoshell_arduino'.
     Open 'picoshell_arduino.ino' file in Arduino IDE, build and upload.
     You probably want to disable some of the features to save ROM / RAM
     by editing picoshell_config.h file.
